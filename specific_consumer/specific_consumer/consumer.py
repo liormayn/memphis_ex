@@ -5,6 +5,7 @@ from nats.errors import TimeoutError
 from common.protobuf.transformers import parse_post_from_string
 from common.urls import NATS_URL
 from common.stream_subjects import MAIN_NEWS_SUBJECT
+from common.configuration import NATS_TIMEOUT_IN_SECONDS
 
 
 async def main():
@@ -14,7 +15,7 @@ async def main():
     try:
         while True:
             try:
-                msg = await sub.next_msg(timeout=60)
+                msg = await sub.next_msg(timeout=NATS_TIMEOUT_IN_SECONDS)
                 post = parse_post_from_string(msg.data)
                 print({'subject': msg.subject,
                        'data': {'title': post.title, 'summary': post.summary, 'link': post.link}})

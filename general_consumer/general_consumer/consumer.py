@@ -4,6 +4,9 @@ from nats.errors import TimeoutError
 from common.protobuf.transformers import parse_post_from_string
 from common.urls import NATS_URL
 from common.stream_subjects import STREAM, MAIN_NEWS_SUBJECT, GENERAL_NEWS_STREAM, SPORTS_NEWS_STREAM
+from common.configuration import NATS_TIMEOUT_IN_SECONDS
+
+SPORT_KEYWORDS = ['sport']
 
 
 async def main():
@@ -15,11 +18,11 @@ async def main():
 
     while True:
         try:
-            msgs = await pub_sub.fetch(1, timeout=60)
+            msgs = await pub_sub.fetch(1, timeout=NATS_TIMEOUT_IN_SECONDS)
             for msg in msgs:
                 await msg.ack()
                 post = parse_post_from_string(msg.data)
-                if 'sport' in post.title:
+                if any(keyword in post.title for keyword in SPORT_KEYWORDS):
                     await nc.publish(SPORTS_NEWS_STREAM, msg.data)
                 else:
                     await nc.publish(GENERAL_NEWS_STREAM, msg.data)

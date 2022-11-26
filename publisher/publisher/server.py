@@ -19,7 +19,7 @@ async def post_posts():
 
 @application.route('/available', methods=['GET'])
 async def available():
-    return "i am alive", 202
+    return "i am alive", 200
 
 
 if __name__ == '__main__':

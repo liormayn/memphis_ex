@@ -8,6 +8,7 @@ docker compose build
 docker compose up
 ```
 
+to alter timeouts or intervals - use common/configuration.py
 
 #### disclaimers and assumptions:
 1. i'm taking the news articles from the front page - some don't have summary for some reason.
