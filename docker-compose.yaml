@@ -1,0 +1,57 @@
+version: "3"
+networks:
+  nats: {}
+  host: {}
+
+configs:
+  nats-config:
+    file: ./nats.conf
+
+services:
+  nats:
+      image: 'nats'
+      ports:
+        - '80:4222'
+        - '8222:8222'
+      networks:
+        - nats
+      configs:
+        - nats-config
+      entrypoint: /nats-server
+      command: --jetstream
+  api:
+    build:
+      context: .
+      dockerfile: './publisher/dockerfile'
+    ports:
+      - '5000:5000'
+    links:
+      - "nats"
+    networks:
+      - host
+      - nats
+  scraper:
+    build:
+      context: .
+      dockerfile: './scraper/dockerfile'
+    links:
+      - "api"
+    networks:
+      - host
+  general_consumer:
+    build:
+      context: .
+      dockerfile: './general_consumer/dockerfile'
+    networks:
+      - nats
+    links:
+      - "nats"
+  specific_consumer:
+    build:
+      context: .
+      dockerfile: './specific_consumer/dockerfile'
+    networks:
+      - nats
+    links:
+      - "nats"
+

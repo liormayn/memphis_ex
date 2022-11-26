@@ -1,0 +1,15 @@
+FROM python:3.8-alpine
+
+COPY publisher/requirements.txt /publisher/requirements.txt
+#COPY /publisher/common /common
+WORKDIR /publisher
+
+COPY common /publisher/common
+ENV PYTHONPATH /publisher
+
+RUN apk update && apk add bash
+RUN pip install -r /publisher/requirements.txt
+
+COPY publisher/ /publisher
+
+CMD ["python", "-u", "publisher/server.py"]

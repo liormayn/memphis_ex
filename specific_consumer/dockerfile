@@ -1,0 +1,14 @@
+FROM python:3.8-alpine
+
+COPY specific_consumer/requirements.txt /specific_consumer/requirements.txt
+WORKDIR /specific_consumer
+
+COPY common /specific_consumer/common
+ENV PYTHONPATH /specific_consumer
+
+RUN apk update && apk add bash
+RUN pip install -r /specific_consumer/requirements.txt
+
+COPY specific_consumer/ /specific_consumer
+
+CMD ["python", "-u", "specific_consumer/consumer.py"]

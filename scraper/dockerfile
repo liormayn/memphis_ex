@@ -1,0 +1,14 @@
+FROM python:3.8-alpine
+
+COPY scraper/requirements.txt /scraper/requirements.txt
+WORKDIR /scraper
+
+COPY common /scraper/common
+ENV PYTHONPATH /scraper
+
+RUN apk update && apk add bash && apk add curl
+RUN pip install -r /scraper/requirements.txt
+
+COPY scraper/ /scraper
+
+CMD ["python", "scraper/scraping_handler.py"]

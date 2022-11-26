@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package memphis;
+
+message Post {
+  required string title = 1;
+  optional string summary = 2;
+  optional string link = 3;
+}
